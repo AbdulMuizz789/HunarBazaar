@@ -3,7 +3,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const http = require('http');
 const cors = require('cors');
-
 const app = express();
 
 app.use(cors());
@@ -14,6 +13,10 @@ mongoose.connect(process.env.MONGODB_URI)
     .then(()=>console.log('Connected to MongoDB'))
     .catch(err=>console.error('MongoDB connction error:',err));
 
+const gigRoutes = require('./routes/gigs');
+
+app.use('/api/gigs', gigRoutes);
+
 app.use((req, res) => {
     res.status(404).json({error: 'Route not found'});
 });
@@ -23,5 +26,5 @@ app.use((err, req, res, next) => {
     res.status(500).json({error: 'Internal server error'});
 });
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
