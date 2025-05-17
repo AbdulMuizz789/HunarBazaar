@@ -5,9 +5,10 @@ const Gig = require('../models/Gig');
 router.post('/',authenticate,async(req,res)=>{
     try{
         const gig = await Gig.create({
-            title: req.body.title,description:
-            req.body.description,
-            budget: req.body.budget,client: req.userid
+            title: req.body.title,
+            description:req.body.description,
+            budget: req.body.budget,
+            client: req.userid
         });
         res.status(201).json(gig);
     } catch(err){
