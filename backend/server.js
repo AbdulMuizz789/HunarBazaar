@@ -3,11 +3,44 @@ const express = require('express');
 const mongoose = require('mongoose');
 const http = require('http');
 const cors = require('cors');
-const app = express();
+const socketio = require('socket.io');
 
-app.use(cors());
+const app = express();
 const server = http.createServer(app);
+const io = socketio(server, {
+    cors: {
+        origin: 'https://hunarbazaar.frontend.vercel.app',
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        credentials: true
+    }
+});
+
+app.use(cors({
+    origin: 'https://hunarbazaar.frontend.vercel.app',
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true
+}));
 app.use(express.json());
+
+io.on('connection', (socket) => {
+    console.log('New client connected');
+
+    socket.on('join_gig', (gigId) => {
+        socket.join(gigId);
+        console.log(`User joined gig room: ${gigId}`);
+    });
+
+    socket.on('register', (userId) => {
+        console.log(`User ${userId} joined their room`);
+        socket.join(userId);
+    });
+
+    socket.on('send_message', async (data) => {
+        //TODO: add logic
+    });
+
+    socket.on('disconnect', () => console.log('Client disconnected'));
+});
 
 mongoose.connect(process.env.MONGODB_URI)
     .then(()=>console.log('Connected to MongoDB'))
