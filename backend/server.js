@@ -77,6 +77,7 @@ const userRoutes = require('./routes/users'); // User routes (profile, etc.)
 const bookingRoutes = require('./routes/bookings');
 const messageRoutes = require('./routes/messages');
 const dialogflowRoutes = require('./routes/dialogflow');
+const suggestionsRoutes = require('./routes/suggestions');
 
 // Use Routes
 app.use('/api/auth', authRoutes);  // Prefix: /api/auth
@@ -87,6 +88,7 @@ app.use('/api/users', userRoutes); // Path: /api/users/:userId
 app.use('/api/gigs', bookingRoutes); // Prefix: /api/gigs/:gigId/book
 app.use('/api/messages', messageRoutes); // Prefix: /api/messages
 app.use('/api/dialogflow', dialogflowRoutes); // Prefix: /api/dialogflow
+app.use('/api/suggestions', suggestionsRoutes);
 
 // 404 Handler
 app.use((req, res) => {

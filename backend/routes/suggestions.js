@@ -1,5 +1,5 @@
 const express = require('express');
-const { getArtisanSuggestions, getClientSuggestions } = require('../services/suggestions');
+const { getArtisanSuggestions, getClientSuggestions } = require('../middleware/suggestions');
 const router = express.Router();
 
 router.get('/:userId', async (req, res) => {
