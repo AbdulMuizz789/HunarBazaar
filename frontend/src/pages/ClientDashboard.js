@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '../config';
 import { Link } from 'react-router-dom';
+import { getCurrentUser } from '../utils/auth';
+import Suggestions from '../components/Suggestions';
 
 export default function ClientDashboard() {
   const [gigs, setGigs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const user = getCurrentUser();
 
   useEffect(() => {
     const fetchClientGigs = async () => {
@@ -140,6 +143,7 @@ export default function ClientDashboard() {
           ))}
         </div>
       )}
+      <Suggestions userId={user.id} userRole="client" />
     </div>
   );
 }

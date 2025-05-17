@@ -15,8 +15,6 @@ const userSchema = new mongoose.Schema({
     description: String,
     imageUrl: String 
   }],
-  skills: { type: [String], default: [] },  // e.g., ["plumbing", "carpentry"]
-  location: { type: String },
   preferences: {
     skills: [String],          // Artisan: ["carpentry", "plumbing"]
     location: String,          // Both: "New York, NY"

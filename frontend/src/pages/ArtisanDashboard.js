@@ -4,13 +4,16 @@ import { io } from 'socket.io-client';
 import { API_URL } from '../config';
 import { jwtDecode } from 'jwt-decode';
 import { Link } from 'react-router-dom';
+import {getCurrentUser} from '../utils/auth';
 import BookingActions from '../components/BookingActions';
+import Suggestions from '../components/Suggestions';
 
 export default function ArtisanDashboard() {
   const [appliedGigs, setAppliedGigs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [socket, setSocket] = useState(null);
   const token = localStorage.getItem('token');
+  const user = getCurrentUser();
 
   // Fetch applied gigs on component mount
   useEffect(() => {
@@ -101,6 +104,7 @@ export default function ArtisanDashboard() {
               </div>
             </div>
           ))}
+          <Suggestions userId={user.id} userRole="artisan" />
         </div>
       )}
     </div>
