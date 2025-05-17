@@ -27,6 +27,7 @@ export default function Gigs() {
 
         setAppliedGigIds(new Set(appliedIds));
       } catch (err) {
+        console.log(err);
         setError('Failed to fetch gigs.');
       } finally {
         setLoading(false);

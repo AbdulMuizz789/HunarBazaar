@@ -1,1 +1,1 @@
-export const API_URL = 'https://artisan-mvp-backend.onrender.com' || "http://localhost:5000";
+export const API_URL = 'https://hunarbazaar.onrender.com' || "http://localhost:5000";

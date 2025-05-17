@@ -11,16 +11,6 @@ import PostGig from './pages/PostGig';
 import FindArtisans from './pages/FindArtisans';
 import { isArtisan } from './utils/auth';
 import DialogflowChatbot from './components/DialogflowChatbot';
-import { API_URL } from './config';
-const cors = require('cors');
-const express = require('express')
-
-const app = express()
-app.cors({
-  origin:API_URL,
-  methods:["GET","PUT","POST"],
-  withCredentials:true
-})
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
