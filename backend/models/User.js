@@ -18,10 +18,6 @@ const userSchema = new mongoose.Schema({
   preferences: {
     skills: [String],          // Artisan: ["carpentry", "plumbing"]
     location: String,          // Both: "New York, NY"
-    budgetRange: {             // Client: { min: 100, max: 500 }
-      min: Number,
-      max: Number
-    }
   },
   activityHistory: [{
     type: { type: String },    // "gig_viewed", "gig_applied", "search_query"
