@@ -18,7 +18,7 @@ export default function Suggestions({ userId, userRole }) {
     fetchSuggestions();
   }, [userId]);
 
-  if(error) return <p>{error.message}</p>
+  if(error) return ( <p>{error.message}</p> );
 
   return (
     <div className="bg-gray-50 p-4 rounded-lg">
