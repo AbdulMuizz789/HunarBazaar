@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { API_URL } from '../config';
-import { extractTextFromImage } from '../utils/ocr';
 
 export default function AddPortfolioItem({ userId }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
-  const [extractedText, setExtractedText] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,13 +22,6 @@ export default function AddPortfolioItem({ userId }) {
           'Content-Type': 'multipart/form-data'
         }
       });
-
-      const imageUrl = res.data.imageUrl;
-      const text = await extractTextFromImage(imageUrl);
-      setExtractedText(text);
-
-      // const tags = generateTags(text); // Custom logic (e.g., regex for emails/phones)
-      // setAutoTags(tags);
 
       alert('Portfolio item added!');
     } catch (err) {
@@ -67,12 +58,6 @@ export default function AddPortfolioItem({ userId }) {
       >
         Upload
       </button>
-      {extractedText && (
-        <div className="mt-2 p-2 bg-gray-50 rounded">
-          <p className="text-sm font-medium">Extracted Text:</p>
-          <p className="text-xs text-gray-600">{extractedText}</p>
-        </div>
-      )}
     </form>
   );
 }

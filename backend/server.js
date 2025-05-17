@@ -12,7 +12,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
   cors: {
-    origin: 'https://artisan-mvp-frontend.vercel.app',
+    origin: 'https://hunarbazaar.vercel.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true
   }
@@ -20,7 +20,7 @@ const io = socketio(server, {
 
 // Middleware
 app.use(cors({
-  origin: 'https://artisan-mvp-frontend.vercel.app',
+  origin: 'https://hunarbazaar.vercel.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true
 }));
