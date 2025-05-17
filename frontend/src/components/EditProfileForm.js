@@ -6,7 +6,15 @@ const EditProfileForm = ({ userId }) => {
   const [form, setForm] = useState({ name: '', email: '', location: '', skills: [] });
 
   useEffect(() => {
-    axios.get(`${API_URL}/api/users/${userId}`).then((res) => setForm(res.data));
+    axios.get(`${API_URL}/api/users/${userId}`).then((res) => { 
+        const newForm = {
+            name: res.data.name,
+            email: res.data.email,
+            location: res.data.preferences.location,
+            skills: res.data.preferences.skills
+        }
+        setForm(newForm);
+    });
   }, [userId]);
 
   const handleChange = (e) => {
@@ -30,7 +38,7 @@ const EditProfileForm = ({ userId }) => {
       <input className="block w-full mb-2 p-2 border" type="text" name="name" value={form.name} onChange={handleChange} placeholder="Name" />
       <input className="block w-full mb-2 p-2 border" type="email" name="email" value={form.email} onChange={handleChange} placeholder="Email" />
       <input className="block w-full mb-2 p-2 border" type="text" name="location" value={form.location} onChange={handleChange} placeholder="Location" />
-      <input className="block w-full mb-2 p-2 border" type="text" name="skills" value={form.skills.join(', ')} onChange={handleSkillsChange} placeholder="Skills (comma separated)" />
+      <input className="block w-full mb-2 p-2 border" type="text" name="skills" value={form.skills?.join(', ')} onChange={handleSkillsChange} placeholder="Skills (comma separated)" />
       <button className="bg-blue-600 text-white px-4 py-2 rounded" type="submit">Save Changes</button>
     </form>
   );
