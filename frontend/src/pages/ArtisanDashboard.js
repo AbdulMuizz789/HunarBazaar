@@ -106,9 +106,9 @@ export default function ArtisanDashboard() {
               </div>
             </div>
           ))}
-          <Suggestions userId={userId} userRole="artisan" />
         </div>
       )}
+      <Suggestions userId={userId} userRole="artisan" />
     </div>
   );
 }
