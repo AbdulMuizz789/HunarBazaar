@@ -14,8 +14,10 @@ mongoose.connect(process.env.MONGODB_URI)
     .catch(err=>console.error('MongoDB connction error:',err));
 
 const gigRoutes = require('./routes/gigs');
+const authRoutes = require('./routes/auth');
 
 app.use('/api/gigs', gigRoutes);
+app.use('/api/auth', authRoutes);
 
 app.use((req, res) => {
     res.status(404).json({error: 'Route not found'});
