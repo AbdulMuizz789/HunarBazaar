@@ -13,7 +13,7 @@ export default function ArtisanDashboard() {
   const [loading, setLoading] = useState(true);
   const [socket, setSocket] = useState(null);
   const token = localStorage.getItem('token');
-  const user = getCurrentUser();
+  const [userId, setUserId] = useState(null);
 
   // Fetch applied gigs on component mount
   useEffect(() => {
@@ -23,6 +23,8 @@ export default function ArtisanDashboard() {
           headers: { Authorization: `Bearer ${token}` }
         });
         setAppliedGigs(res.data);
+        const user = await getCurrentUser();
+        setUserId(user?.id);
       } catch (err) {
         console.error('Failed to fetch gigs:', err);
       } finally {
@@ -104,7 +106,7 @@ export default function ArtisanDashboard() {
               </div>
             </div>
           ))}
-          <Suggestions userId={user.id} userRole="artisan" />
+          <Suggestions userId={userId} userRole="artisan" />
         </div>
       )}
     </div>

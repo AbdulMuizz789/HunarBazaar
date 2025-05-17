@@ -4,14 +4,21 @@ import { API_URL } from '../config';
 
 export default function Suggestions({ userId, userRole }) {
   const [suggestions, setSuggestions] = useState([]);
+  const [error, setError] = useState({});
 
   useEffect(() => {
     const fetchSuggestions = async () => {
-      const res = await axios.get(`${API_URL}/api/suggestions/${userId}`);
-      setSuggestions(res.data);
+      try{
+        const res = await axios.get(`${API_URL}/api/suggestions/${userId}`);
+        setSuggestions(res.data);
+      } catch (err) {
+        setError(err);
+      }
     };
     fetchSuggestions();
   }, [userId]);
+
+  if(error) return <p>{error.message}</p>
 
   return (
     <div className="bg-gray-50 p-4 rounded-lg">
