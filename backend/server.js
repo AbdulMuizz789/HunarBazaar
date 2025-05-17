@@ -9,14 +9,14 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
     cors: {
-        origin: 'https://hunarbazaar.vercel.app/',
+        origin: 'https://hunarbazaar.vercel.app',
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         credentials: true
     }
 });
 
 app.use(cors({
-    origin: 'https://hunarbazaar.vercel.app/',
+    origin: 'https://hunarbazaar.vercel.app',
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true
 }));
