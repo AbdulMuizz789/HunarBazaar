@@ -1,24 +1,61 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import ArtisanDashboard from './pages/ArtisanDashboard';
+import Auth from './pages/Auth';
+import Gigs from './pages/Gigs';
+import Header from './components/Header';
+import ClientDashboard from './pages/ClientDashboard';
+import GigDetail from './pages/GigDetail';
+import Profile from './pages/Profile';
+import PostGig from './pages/PostGig';
+import FindArtisans from './pages/FindArtisans';
+import { isArtisan } from './utils/auth';
+import DialogflowChatbot from './components/DialogflowChatbot';
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }
+  , []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+      <Routes>
+        <Route path="/" element={<Gigs />} />         {/* Homepage (public) */}
+        <Route path="/auth" element={<Auth setIsLoggedIn={setIsLoggedIn} />} />     {/* Login/Register */}
+        <Route path="/gigs/:gigId" element={<GigDetail />} />
+        <Route 
+          path="/dashboard" 
+          element={
+            isArtisan() ? (
+              <ArtisanDashboard />
+            ) : (
+              <Navigate to="/auth" replace />
+            )
+          } 
+        /> {/* Protected route */}
+        <Route 
+          path="/client-dashboard" 
+          element={
+            !isArtisan() ? (
+              <ClientDashboard />
+            ) : (
+              <Navigate to="/auth" replace />
+            )
+          } 
+        />
+        <Route path="/profile/:userId" element={<Profile />} />
+        <Route path="/post-gig" element={<PostGig />} />
+        <Route path="/find-artisans" element={<FindArtisans />} />
+      </Routes>
+      <DialogflowChatbot />
+    </Router>
   );
 }
 
