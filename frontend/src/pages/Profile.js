@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { API_URL } from '../config';
 import AddPortfolioItem from '../components/AddPortfolioItem';
+import EditProfileForm from '../components/EditProfileForm';
 import { getCurrentUser } from '../utils/auth';
 
 export default function Profile() {
@@ -68,7 +69,10 @@ export default function Profile() {
         </div>
       )}
       {(currUser.id === userId) && (
-        <AddPortfolioItem userId={userId} />
+        <div>
+          <AddPortfolioItem userId={userId} />
+          <EditProfileForm userId={userId} />
+        </div>
       )}
     </div>
   );
