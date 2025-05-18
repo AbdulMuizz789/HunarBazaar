@@ -11,6 +11,7 @@ import PostGig from './pages/PostGig';
 import FindArtisans from './pages/FindArtisans';
 import { isArtisan } from './utils/auth';
 import DialogflowChatbot from './components/DialogflowChatbot';
+import ChatAssistant from './components/ChatAssistant';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
@@ -53,8 +54,10 @@ function App() {
         <Route path="/profile/:userId" element={<Profile />} />
         <Route path="/post-gig" element={<PostGig />} />
         <Route path="/find-artisans" element={<FindArtisans />} />
+        <Route path="/chat" element={<ChatAssistant />} />
       </Routes>
-      <DialogflowChatbot />
+      {/* <DialogflowChatbot /> */}
+      <ChatAssistant />
     </Router>
   );
 }

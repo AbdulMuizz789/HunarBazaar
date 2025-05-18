@@ -76,11 +76,10 @@ router.put('/:userId', async (req, res) => {
     if (name) updateFields.name = name;
     if (email) updateFields.email = email;
 
-    if (location || skills || budgetRange) {
+    if (location || skills) {
       updateFields.preferences = {};
       if (location) updateFields.preferences.location = location;
       if (skills) updateFields.preferences.skills = skills;
-      if (budgetRange) updateFields.preferences.budgetRange = budgetRange;
     }
 
     const user = await User.findByIdAndUpdate(

@@ -2,7 +2,7 @@ const express = require('express');
 const { SessionsClient } = require('@google-cloud/dialogflow');
 const router = express.Router();
 
-const dialogflowClient = new SessionsClient({
+const client = new SessionsClient({
   keyFilename: 'dialogflow-key.json'
 });
 
@@ -38,6 +38,38 @@ router.post('/detect-intent', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+router.post('/', async (req, res) => {
+  const { query, mode, sessionId } = req.body;
+
+  // Configure based on input mode
+  const request = {
+    session: client.projectAgentSessionPath(process.env.DIALOGFLOW_PROJECT_ID, sessionId),
+    queryInput: {
+      [mode === 'voice' ? 'audio' : 'text']: {
+        [mode === 'voice' ? 'audio' : 'text']: mode === 'voice' ? bufferFromBase64(query) : query,
+        languageCode: 'en-US'
+      }
+    },
+    outputAudioConfig: {
+      audioEncoding: 'OUTPUT_AUDIO_ENCODING_LINEAR_16',
+      synthesizeSpeechConfig: {
+        voice: {
+          name: 'en-US-Wavenet-D',
+          ssmlGender: 'FEMALE'
+        }
+      }
+    }
+  };
+
+  const [response] = await client.detectIntent(request);
+  
+  res.json({
+    text: response.queryResult.fulfillmentText,
+    audio: mode === 'voice' ? response.outputAudio : null,
+    intent: response.queryResult.intent.displayName
+  });
 });
 
 module.exports = router;

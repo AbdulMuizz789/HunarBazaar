@@ -1,0 +1,92 @@
+import { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+import { API_URL } from '../config';
+
+export default function ChatAssistant() {
+  const [inputMode, setInputMode] = useState('text'); // 'text' or 'voice'
+  const [messages, setMessages] = useState([]);
+  const [inputText, setInputText] = useState('');
+  const recognitionRef = useRef(null);
+
+  useEffect(() => {
+    if (inputMode === 'voice') {
+      recognitionRef.current = new window.webkitSpeechRecognition();
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.interimResults = true;
+      recognitionRef.current.lang = 'en-US';
+
+      recognitionRef.current.onresult = (event) => {
+        const transcript = Array.from(event.results)
+          .map(result => result[0].transcript)
+          .join('');
+
+        if (event.results[0].isFinal) {
+          handleSend(transcript);
+        }
+      };
+
+      recognitionRef.current.start();
+    } else {
+      recognitionRef.current?.stop();
+    }
+
+    return () => recognitionRef.current?.stop();
+  }, [inputMode]);
+
+  const handleSend = async (message) => {
+    if (!message.trim()) return;
+
+    setMessages(prev => [...prev, { text: message, sender: 'user' }]);
+
+    const response = await axios.post(API_URL+'/api/dialogflow', {
+      query: message,
+      mode: inputMode,
+      sessionId: 'user-session-1'
+    });
+
+    setMessages(prev => [...prev, { text: response.data.text, sender: 'bot' }]);
+
+    if (inputMode === 'voice') {
+      const utterance = new SpeechSynthesisUtterance(response.data.text);
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  return (
+    <div className="fixed bottom-6 right-6 w-96 rounded-2xl shadow-lg bg-white border border-gray-200">
+      <div className="p-4 overflow-y-auto max-h-96 space-y-2">
+        {messages.map((msg, i) => (
+          <div key={i} className={`p-2 rounded-lg ${msg.sender === 'user' ? 'bg-blue-100 text-right ml-auto' : 'bg-gray-100 text-left mr-auto'}`}>
+            {msg.text}
+          </div>
+        ))}
+      </div>
+
+      <div className="flex items-center border-t border-gray-300 p-2">
+        <button
+          onClick={() => setInputMode(mode => mode === 'text' ? 'voice' : 'text')}
+          className={`text-xl px-2 ${inputMode === 'voice' ? 'text-blue-500' : 'text-gray-500'}`}
+        >
+          {inputMode === 'text' ? '🎤' : '⌨️'}
+        </button>
+
+        {inputMode === 'text' ? (
+          <input
+            type="text"
+            className="flex-1 border border-gray-300 rounded-lg px-3 py-1 mx-2"
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleSend(inputText);
+                setInputText('');
+              }
+            }}
+          />
+        ) : (
+          <div className="text-gray-500 italic ml-2">Listening...</div>
+        )}
+      </div>
+    </div>
+  );
+}
