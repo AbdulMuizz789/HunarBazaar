@@ -29,6 +29,7 @@ function App() {
       <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
       <Routes>
         <Route path="/" element={<HomePage />} />         {/* Homepage (public) */}
+        <Route path='/gigs' element={<Gigs />} />
         <Route path="/auth" element={<Auth setIsLoggedIn={setIsLoggedIn} />} />     {/* Login/Register */}
         <Route path="/gigs/:gigId" element={<GigDetail />} />
         <Route 

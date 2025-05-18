@@ -10,9 +10,9 @@ export default function HomePage() {
           <span>HunarBazaar</span>
         </div>
         <nav className="space-x-6">
-          <a href="#" className="hover:text-purple-400 transition">Home</a>
-          <a href="#" className="hover:text-purple-400 transition">Gigs</a>
-          <a href="#" className="hover:text-purple-400 transition">Login</a>
+          <a href="/" className="hover:text-purple-400 transition">Home</a>
+          <a href="/gigs" className="hover:text-purple-400 transition">Gigs</a>
+          <a href="/login" className="hover:text-purple-400 transition">Login</a>
         </nav>
       </header>
 
@@ -42,13 +42,13 @@ export default function HomePage() {
           </p>
 
           <div className="space-x-4">
-            <button className="px-6 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg shadow" onCl>Get Started</button>
+            <button className="px-6 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg shadow">Get Started</button>
             <button className="px-6 py-2 border border-gray-400 hover:bg-gray-700 rounded-lg shadow">View Gigs</button>
           </div>
         </div>
 
         {/* Gradient lines / abstract wave effect */}
-        <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-gradient-to-t from-purple-900 via-fuchsia-700 to-transparent opacity-30 pointer-events-none transform scale-x-[-1] rotate-180" />
+        <img className="absolute right-0 top-0 bottom-0 w-1/2 opacity-30 pointer-events-none transform scale-x-[-1]" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQF8djlNe8HhWHA_q1LW-AMElaYWhFlD407EnBykoQz9S-cSH0QSL9d5N33Gvm72coAZpI&usqp=CAU" />
       </section>
     </div>
   );
