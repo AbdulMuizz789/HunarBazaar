@@ -9,7 +9,13 @@ export default function ChatAssistant() {
   const recognitionRef = useRef(null);
 
   useEffect(() => {
+    let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
     if (inputMode === 'voice') {
+      if(!SpeechRecognition){
+        alert('Your browser does not support text-to-speech');
+        return () => recognitionRef.current?.stop();
+      }
       recognitionRef.current = new window.webkitSpeechRecognition();
       recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
