@@ -40,22 +40,33 @@ export default function ChatAssistant() {
   }, [inputMode]);
 
   const handleSend = async (message, overrideMode = null) => {
-    if (!message.trim()) return;
+  if (!message.trim()) return;
 
-    const modeToUse = overrideMode || inputMode;
+  const modeToUse = overrideMode || inputMode;
 
-    setMessages(prev => [...prev, { text: message, sender: 'user' }]);
+  setMessages(prev => [...prev, { text: message, sender: 'user' }]);
 
-    const response = await axios.post(API_URL + '/api/dialogflow', {
-      query: message,
-      mode: 'text',
-      sessionId: 'user-session-1',
-    });
+  // Stop recognition to avoid bot hearing itself
+  if (modeToUse === 'voice') {
+    recognitionRef.current?.stop();
+  }
 
-    setMessages(prev => [...prev, { text: response.data.text, sender: 'bot' }]);
+  const response = await axios.post(API_URL + '/api/dialogflow', {
+    query: message,
+    mode: 'text',
+    sessionId: 'user-session-1',
+  });
+
+  setMessages(prev => [...prev, { text: response.data.text, sender: 'bot' }]);
 
     if (modeToUse === 'voice') {
       const utterance = new SpeechSynthesisUtterance(response.data.text);
+
+      utterance.onend = () => {
+        // Resume recognition only after bot finishes speaking
+        recognitionRef.current?.start();
+      };
+      window.speechSynthesis.cancel(); // Add before `speak(utterance)`
       window.speechSynthesis.speak(utterance);
     }
   };
