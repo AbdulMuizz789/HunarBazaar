@@ -1,5 +1,5 @@
-const express = require('express');
-const { SessionsClient } = require('@google-cloud/dialogflow');
+import express from 'express';
+import {SessionsClient} from '@google-cloud/dialogflow';
 const router = express.Router();
 import { bufferFromBase64 } from '../middleware/audio.js';
 
@@ -71,4 +71,4 @@ router.post('/', async (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;
