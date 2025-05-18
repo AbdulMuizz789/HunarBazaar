@@ -12,7 +12,7 @@ export default function HomePage() {
         <nav className="space-x-6">
           <a href="/" className="hover:text-purple-400 transition">Home</a>
           <a href="/gigs" className="hover:text-purple-400 transition">Gigs</a>
-          <a href="/login" className="hover:text-purple-400 transition">Login</a>
+          <a href="/auth" className="hover:text-purple-400 transition">Login</a>
         </nav>
       </header>
 
