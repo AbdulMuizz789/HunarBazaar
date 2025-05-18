@@ -46,13 +46,11 @@ router.post('/', async (req, res) => {
 
   let queryInput;
 
+  // Force fallback to text if mode is undefined or invalid
   if (mode === 'voice') {
-    if (!isBase64(query)) {
-      return res.status(400).json({ error: 'Invalid base64 audio input.' });
-    }
-
+    // Since no real base64 audio is expected, treat it as text
     queryInput = {
-      audio: bufferFromBase64(query),
+      text: query,
     };
   } else {
     queryInput = {
@@ -63,10 +61,10 @@ router.post('/', async (req, res) => {
   const request = {
     session: client.projectAgentSessionPath(process.env.DIALOGFLOW_PROJECT_ID, sessionId),
     queryInput: {
-      [mode === 'voice' ? 'audio' : 'text']: {
-        [mode === 'voice' ? 'audio' : 'text']: queryInput[mode],
-        languageCode: 'en-US'
-      }
+      text: {
+        text: queryInput.text,
+        languageCode: 'en-US',
+      },
     },
     outputAudioConfig: {
       audioEncoding: 'OUTPUT_AUDIO_ENCODING_LINEAR_16',
@@ -83,13 +81,12 @@ router.post('/', async (req, res) => {
     const [response] = await client.detectIntent(request);
     res.json({
       text: response.queryResult.fulfillmentText,
-      audio: mode === 'voice' ? response.outputAudio : null,
+      audio: null, // Always null since no real audio request
       intent: response.queryResult.intent.displayName
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
-
 
 module.exports = router;
