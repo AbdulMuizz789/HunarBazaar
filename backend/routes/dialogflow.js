@@ -1,6 +1,7 @@
 const express = require('express');
 const { SessionsClient } = require('@google-cloud/dialogflow');
 const router = express.Router();
+const bufferFromBase64 = require('../middleware/audio');
 
 const client = new SessionsClient({
   keyFilename: 'dialogflow-key.json'
