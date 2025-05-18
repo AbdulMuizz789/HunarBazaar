@@ -72,13 +72,20 @@ router.put('/:userId', async (req, res) => {
   try {
     const { name, email, location, skills } = req.body;
 
+    const updateFields = {};
+    if (name) updateFields.name = name;
+    if (email) updateFields.email = email;
+
+    if (location || skills || budgetRange) {
+      updateFields.preferences = {};
+      if (location) updateFields.preferences.location = location;
+      if (skills) updateFields.preferences.skills = skills;
+      if (budgetRange) updateFields.preferences.budgetRange = budgetRange;
+    }
+
     const user = await User.findByIdAndUpdate(
       req.params.userId,
-      {
-        ...(name && { name }),
-        ...(email && { email }),
-        ...(preferences && { location:location,skills:skills })
-      },
+      updateFields,
       { new: true, runValidators: true }
     );
 
