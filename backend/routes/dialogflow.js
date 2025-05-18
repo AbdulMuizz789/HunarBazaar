@@ -6,15 +6,13 @@ const client = new SessionsClient({
   keyFilename: 'dialogflow-key.json'
 });
 
-const PROJECT_ID = 'artisanhq-bot-gyhp';
-const sessionId = 'unique-session-per-user';
-
 router.post('/detect-intent', async (req, res) => {
   try {
     const { message, userId } = req.body;
+    const sessionId = 'unique-session-per-user';
 
-    const sessionPath = dialogflowClient.projectAgentSessionPath(
-      PROJECT_ID,
+    const sessionPath = client.projectAgentSessionPath(
+      process.env.DIALOGFLOW_PROJECT_ID,
       `${sessionId}-${userId}`
     );
 
@@ -28,7 +26,7 @@ router.post('/detect-intent', async (req, res) => {
       },
     };
 
-    const [response] = await dialogflowClient.detectIntent(request);
+    const [response] = await client.detectIntent(request);
     const result = response.queryResult;
 
     res.json({
