@@ -76,7 +76,7 @@ const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/users'); // User routes (profile, etc.)
 const bookingRoutes = require('./routes/bookings');
 const messageRoutes = require('./routes/messages');
-import dialogflowRoutes from './routes/dialogflow';
+import dialogflowRoutes from './routes/dialogflow.js';
 const suggestionsRoutes = require('./routes/suggestions');
 
 // Use Routes
