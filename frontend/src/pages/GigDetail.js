@@ -15,7 +15,7 @@ export default function GigDetail() {
   const [alreadyReviewed, setAlreadyReviewed] = useState(false);
   const [error, setError] = useState('');
   const user = getCurrentUser();
-  const [appliedGigIds, setAppliedGigIds] = useState(new Set());
+  const [alreadyApplied, setAlreadyApplied] = useState(false);
   const [messageMap, setMessageMap] = useState({});
   
   useEffect(() => {
@@ -24,13 +24,7 @@ export default function GigDetail() {
         const res = await axios.get(`${API_URL}/api/gigs/${gigId}`);
         setGig(res.data);
 
-        const appliedIds = res.data
-          .filter((gig) =>
-            gig.applications?.some(app => app.artisan?.toString() === user?.id)
-          )
-          .map(gig => gig._id);
-
-        setAppliedGigIds(new Set(appliedIds));
+        setAlreadyApplied(res.data.applications?.some(app => app.artisan?.toString() === user?.id));
 
         const hasReviewed = res.data.reviews?.some(
           (review) => String(review.reviewer) === user?.id
@@ -62,7 +56,7 @@ export default function GigDetail() {
       );
 
       alert('Successfully applied to gig!');
-      setAppliedGigIds(prev => new Set(prev).add(gigId));
+      setAlreadyApplied(true);
     } catch (err) {
       console.error(err);
       alert('Failed to apply to gig.');
@@ -84,8 +78,6 @@ export default function GigDetail() {
       gig.applications?.some(
         (app) => app.artisan === user.id && app.status === 'accepted'
       ));
-
-  const alreadyApplied = appliedGigIds.has(gig._id);
 
   console.log({
     user,
