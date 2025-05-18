@@ -40,36 +40,47 @@ export default function ChatAssistant() {
   }, [inputMode]);
 
   const handleSend = async (message, overrideMode = null) => {
-  if (!message.trim()) return;
+    if (!message.trim()) return;
 
-  const modeToUse = overrideMode || inputMode;
+    const modeToUse = overrideMode || inputMode;
 
-  setMessages(prev => [...prev, { text: message, sender: 'user' }]);
+    // Add user message
+    setMessages(prev => [...prev, { text: message, sender: 'user' }]);
+    setInputText(''); // Clear input field
 
-  // Stop recognition to avoid bot hearing itself
-  if (modeToUse === 'voice') {
-    recognitionRef.current?.stop();
-  }
-
-  const response = await axios.post(API_URL + '/api/dialogflow', {
-    query: message,
-    mode: 'text',
-    sessionId: 'user-session-1',
-  });
-
-  setMessages(prev => [...prev, { text: response.data.text, sender: 'bot' }]);
-
+    // Stop listening while bot processes
     if (modeToUse === 'voice') {
-      const utterance = new SpeechSynthesisUtterance(response.data.text);
+      recognitionRef.current?.stop();
+    }
 
-      utterance.onend = () => {
-        // Resume recognition only after bot finishes speaking
-        recognitionRef.current?.start();
-      };
-      window.speechSynthesis.cancel(); // Add before `speak(utterance)`
-      window.speechSynthesis.speak(utterance);
+    try {
+      const response = await axios.post(API_URL + '/api/dialogflow', {
+        query: message,
+        mode: 'text', // Assuming you're using text now
+        sessionId: 'user-session-1',
+      });
+
+      const botMessage = response.data.text;
+      setMessages(prev => [...prev, { text: botMessage, sender: 'bot' }]);
+
+      if (modeToUse === 'voice') {
+        const utterance = new SpeechSynthesisUtterance(botMessage);
+        utterance.voice = speechSynthesis.getVoices().find(v => v.name.includes('Google') || v.name.includes('Wavenet'));
+
+        utterance.onend = () => {
+          // Restart recognition only after bot finishes speaking
+          recognitionRef.current?.start();
+        };
+
+        window.speechSynthesis.cancel(); // Stop any ongoing speech
+        window.speechSynthesis.speak(utterance);
+      }
+    } catch (err) {
+      console.error(err);
+      setMessages(prev => [...prev, { text: 'An error occurred.', sender: 'bot' }]);
     }
   };
+
 
   return (
     <div className="fixed bottom-6 right-6 w-96 rounded-2xl shadow-lg bg-white border border-gray-200">
