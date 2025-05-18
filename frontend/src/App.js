@@ -10,7 +10,6 @@ import Profile from './pages/Profile';
 import PostGig from './pages/PostGig';
 import FindArtisans from './pages/FindArtisans';
 import { isArtisan } from './utils/auth';
-import DialogflowChatbot from './components/DialogflowChatbot';
 import ChatAssistant from './components/ChatAssistant';
 
 function App() {
@@ -56,7 +55,6 @@ function App() {
         <Route path="/find-artisans" element={<FindArtisans />} />
         <Route path="/chat" element={<ChatAssistant />} />
       </Routes>
-      {/* <DialogflowChatbot /> */}
       <ChatAssistant />
     </Router>
   );
