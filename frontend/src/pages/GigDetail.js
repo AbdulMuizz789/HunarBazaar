@@ -1,6 +1,6 @@
 // src/pages/GigDetail.js
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { API_URL } from '../config';
 import { getCurrentUser } from '../utils/auth';
 import BookingForm from '../components/BookingForm';
@@ -106,7 +106,7 @@ export default function GigDetail() {
         <span className="font-semibold">Budget:</span> ₹{gig.budget}
       </p>
       <p className="mb-4">
-        <span className="font-semibold">Posted By:</span> {gig.client?.name || 'Anonymous'}
+        <span className="font-semibold">Posted By:</span> {<Link to={`/profile/${gig.client._id}`}>{gig.client?.name}</Link> || 'Anonymous'}
       </p>
 
       {averageRating && (
