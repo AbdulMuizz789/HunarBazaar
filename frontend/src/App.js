@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import ArtisanDashboard from './pages/ArtisanDashboard';
 import Auth from './pages/Auth';
 import Gigs from './pages/Gigs';
@@ -16,17 +16,29 @@ import HomePage from './pages/HomePage';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
 
+  function Layout({ children }) {
+  const location = useLocation();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
-      setIsLoggedIn(true);
-    }
-  }
-  , []);
+    setIsLoggedIn(!!token);
+  }, []);
+
+  // Hide header only on the homepage ("/")
+  const hideHeader = location.pathname === '/';
+
+  return (
+    <>
+      {!hideHeader && <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
+      {children}
+    </>
+  );
+}
 
   return (
     <Router>
-      <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+      <Layout >
       <Routes>
         <Route path="/" element={<HomePage />} />         {/* Homepage (public) */}
         <Route path='/gigs' element={<Gigs />} />
@@ -58,6 +70,7 @@ function App() {
         <Route path="/chat" element={<ChatAssistant />} />
       </Routes>
       <ChatAssistant />
+      </Layout>
     </Router>
   );
 }

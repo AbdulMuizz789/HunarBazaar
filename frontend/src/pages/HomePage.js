@@ -42,8 +42,8 @@ export default function HomePage() {
           </p>
 
           <div className="space-x-4">
-            <button className="px-6 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg shadow">Get Started</button>
-            <button className="px-6 py-2 border border-gray-400 hover:bg-gray-700 rounded-lg shadow">View Gigs</button>
+            <a href="/auth"><button className="px-6 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg shadow">Get Started</button></a>
+            <a href="/gigs"><button className="px-6 py-2 border border-gray-400 hover:bg-gray-700 rounded-lg shadow">View Gigs</button></a>
           </div>
         </div>
 
