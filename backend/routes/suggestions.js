@@ -1,6 +1,7 @@
 const express = require('express');
 const { getArtisanSuggestions, getClientSuggestions } = require('../middleware/suggestions');
 const router = express.Router();
+const User = require('../models/User');
 
 router.get('/:userId', async (req, res) => {
   try {
