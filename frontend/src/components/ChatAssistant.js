@@ -27,7 +27,7 @@ export default function ChatAssistant() {
           .join('');
 
         if (event.results[0].isFinal) {
-          handleSend(transcript);
+          handleSend(transcript, 'text');
         }
       };
 
@@ -39,24 +39,34 @@ export default function ChatAssistant() {
     return () => recognitionRef.current?.stop();
   }, [inputMode]);
 
-  const handleSend = async (message) => {
+  const handleSend = async (message, overrideMode = null) => {
     if (!message.trim()) return;
+
+    const modeToUse = overrideMode || inputMode;
 
     setMessages(prev => [...prev, { text: message, sender: 'user' }]);
 
-    const response = await axios.post(API_URL+'/api/dialogflow', {
+    const response = await axios.post(API_URL + '/api/dialogflow', {
       query: message,
-      mode: inputMode,
-      sessionId: 'user-session-1'
+      mode: modeToUse,
+      sessionId: 'user-session-1',
     });
 
     setMessages(prev => [...prev, { text: response.data.text, sender: 'bot' }]);
 
-    if (inputMode === 'voice') {
+    if (modeToUse === 'voice') {
       const utterance = new SpeechSynthesisUtterance(response.data.text);
       window.speechSynthesis.speak(utterance);
     }
   };
+
+
+  setMessages(prev => [...prev, { text: response.data.text, sender: 'bot' }]);
+
+  if (inputMode === 'voice') {
+    const utterance = new SpeechSynthesisUtterance(response.data.text);
+    window.speechSynthesis.speak(utterance);
+  }
 
   return (
     <div className="fixed bottom-6 right-6 w-96 rounded-2xl shadow-lg bg-white border border-gray-200">
@@ -95,4 +105,4 @@ export default function ChatAssistant() {
       </div>
     </div>
   );
-}
+};
