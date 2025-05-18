@@ -48,7 +48,7 @@ export default function ChatAssistant() {
 
     const response = await axios.post(API_URL + '/api/dialogflow', {
       query: message,
-      mode: modeToUse,
+      mode: 'text',
       sessionId: 'user-session-1',
     });
 
