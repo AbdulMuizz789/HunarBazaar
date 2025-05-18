@@ -9,6 +9,14 @@ export default function ChatAssistant() {
   const recognitionRef = useRef(null);
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.getVoices();
+      };
+    }
+  }, []);
+
+  useEffect(() => {
     let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (inputMode === 'voice') {
@@ -26,9 +34,12 @@ export default function ChatAssistant() {
           .map(result => result[0].transcript)
           .join('');
 
-        if (event.results[0].isFinal) {
-          handleSend(transcript, 'text');
-        }
+      if (event.results[event.results.length - 1].isFinal) {
+        const finalTranscript = event.results[event.results.length - 1][0].transcript;
+        recognitionRef.current.stop(); // Stop recognition before sending
+        handleSend(finalTranscript.trim(), 'voice');
+      }
+
       };
 
       recognitionRef.current.start();
