@@ -97,7 +97,9 @@ export default function ClientDashboard() {
                   <ul className="space-y-3">
                     {gig.applications.map((app) => (
                       <li key={app._id} className="border-l-4 pl-3 py-2" style={{ borderColor: app.status === 'accepted' ? 'green' : app.status === 'rejected' ? 'red' : '#fbbf24' }}>
-                        <p className="font-medium">{app.artisan.name}</p>
+                        <p className="font-medium">
+                          <Link to={`/profile/app.artisan._id`}>{app.artisan.name}</Link>
+                        </p>
                         <p className="text-gray-600">{app.message}</p>
                         <div className="flex gap-2 mt-2">
                         {app.status === 'pending' && (

@@ -15,7 +15,7 @@ export default function Header({ isLoggedIn, setIsLoggedIn }) {
     <header className="bg-gray-800 text-white p-4">
       <nav className="flex gap-4">
         <Link to="/" className="hover:text-blue-300">Home</Link>
-        
+        <Link to="/gigs" className="hover:text-blue-300">Gigs</Link>
         {isLoggedIn ? (
           <>
             {user?.role === 'artisan' && (
