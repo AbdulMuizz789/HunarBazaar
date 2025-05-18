@@ -70,15 +70,14 @@ router.get('/search/artisans', async (req, res) => {
 
 router.put('/:userId', async (req, res) => {
   try {
-    const { name, email, preferences, portfolio } = req.body;
+    const { name, email, location, skills } = req.body;
 
     const user = await User.findByIdAndUpdate(
       req.params.userId,
       {
         ...(name && { name }),
         ...(email && { email }),
-        ...(preferences && { preferences }),
-        ...(portfolio && { portfolio })
+        ...(preferences && { location:location,skills:skills })
       },
       { new: true, runValidators: true }
     );
