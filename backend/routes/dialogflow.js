@@ -39,66 +39,57 @@ router.post('/detect-intent', async (req, res) => {
   }
 });
 
+const isBase64 = (str) => typeof str === 'string' && str.includes('base64,');
+
 router.post('/', async (req, res) => {
+  const { query, mode, sessionId } = req.body;
+
+  let queryInput;
+
+  if (mode === 'voice') {
+    if (!isBase64(query)) {
+      return res.status(400).json({ error: 'Invalid base64 audio input.' });
+    }
+
+    queryInput = {
+      audio: bufferFromBase64(query),
+    };
+  } else {
+    queryInput = {
+      text: query,
+    };
+  }
+
+  const request = {
+    session: client.projectAgentSessionPath(process.env.DIALOGFLOW_PROJECT_ID, sessionId),
+    queryInput: {
+      [mode === 'voice' ? 'audio' : 'text']: {
+        [mode === 'voice' ? 'audio' : 'text']: queryInput[mode],
+        languageCode: 'en-US'
+      }
+    },
+    outputAudioConfig: {
+      audioEncoding: 'OUTPUT_AUDIO_ENCODING_LINEAR_16',
+      synthesizeSpeechConfig: {
+        voice: {
+          name: 'en-US-Wavenet-D',
+          ssmlGender: 'FEMALE'
+        }
+      }
+    }
+  };
+
   try {
-    const { query, mode, sessionId } = req.body;
-
-    if (!query || !mode || !sessionId) {
-      return res.status(400).json({ error: 'Missing required fields' });
-    }
-
-    const sessionPath = client.projectAgentSessionPath(process.env.DIALOGFLOW_PROJECT_ID, sessionId);
-
-    let request;
-
-    if (mode === 'voice') {
-      // Ensure query is base64
-      const audioBuffer = bufferFromBase64(query);
-
-      request = {
-        session: sessionPath,
-        queryInput: {
-          audioConfig: {
-            audioEncoding: 'AUDIO_ENCODING_LINEAR_16',
-            sampleRateHertz: 16000,
-            languageCode: 'en-US',
-          },
-        },
-        inputAudio: audioBuffer,
-        outputAudioConfig: {
-          audioEncoding: 'OUTPUT_AUDIO_ENCODING_LINEAR_16',
-          synthesizeSpeechConfig: {
-            voice: {
-              name: 'en-US-Wavenet-D',
-              ssmlGender: 'FEMALE',
-            },
-          },
-        },
-      };
-    } else {
-      // Text mode
-      request = {
-        session: sessionPath,
-        queryInput: {
-          text: {
-            text: query,
-            languageCode: 'en-US',
-          },
-        },
-      };
-    }
-
     const [response] = await client.detectIntent(request);
-
     res.json({
       text: response.queryResult.fulfillmentText,
-      intent: response.queryResult.intent.displayName,
       audio: mode === 'voice' ? response.outputAudio : null,
+      intent: response.queryResult.intent.displayName
     });
   } catch (error) {
-    console.error('Dialogflow error:', error);
     res.status(500).json({ error: error.message });
   }
 });
+
 
 module.exports = router;

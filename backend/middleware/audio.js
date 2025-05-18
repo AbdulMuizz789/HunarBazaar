@@ -1,4 +1,7 @@
 export const bufferFromBase64 = (base64) => {
+  if (!base64 || typeof base64 !== 'string' || !base64.includes(',')) {
+    throw new Error('Invalid base64 input');
+  }
   return Buffer.from(base64.split(',')[1], 'base64');
 };
 
