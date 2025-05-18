@@ -84,6 +84,43 @@ export default function GigDetail() {
           ⭐ {averageRating} / 5 ({gig.reviews?.length} reviews)
         </p>
       )}
+
+      {user?.role === 'artisan' && (
+        <>
+          {!gig.isCompleted ? (
+            <>
+            {!alreadyApplied && (
+              <textarea
+                placeholder="Write a message to the client..."
+                value={messageMap[gig._id] || ''}
+                onChange={(e) => handleMessageChange(gig._id, e.target.value)}
+                rows={3}
+                className="w-full p-2 border border-gray-300 rounded resize-y mb-3"
+              />
+            )}
+            <button
+              onClick={() => handleApply(gig._id, messageMap[gig._id])}
+              disabled={alreadyApplied}
+              className={`w-full sm:w-auto px-4 py-2 rounded text-white font-medium transition ${
+                alreadyApplied
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-blue-600 hover:bg-blue-700'
+                }`}
+            >
+              {alreadyApplied ? 'Applied' : 'Apply to Gig'}
+            </button>
+          </>
+        ) : (
+          <button
+            disabled='true'
+            className={'w-full sm:w-auto px-4 py-2 rounded text-white font-medium transition bg-gray-400 cursor-not-allowed'}
+          >
+            Completed
+          </button>
+        )}
+      </>
+    )}
+
       {user?.id === gig.client._id && gig.applications.some(app => app.status === 'accepted') && !gig.booking?.startDate && (
         <BookingForm gigId={gig._id} />
       )}
