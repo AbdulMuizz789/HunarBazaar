@@ -53,9 +53,9 @@ router.get('/search/artisans', async (req, res) => {
   try {
     const { skill, location, minRating } = req.query;
     const query = { role: 'artisan' };
-
-    if (skill) query.skills = { $in: [new RegExp(skill, 'i')] };
-    if (location) query.location = { $regex: new RegExp(location, 'i') };
+    query.preferences = { skills:[],location:'' };
+    if (skill) query.preferences.skills = { $in: [new RegExp(skill, 'i')] };
+    if (location) query.preferences.location = { $regex: new RegExp(location, 'i') };
     if (minRating) query['rating.average'] = { $gte: Number(minRating) };
 
     const artisans = await User.find(query)
