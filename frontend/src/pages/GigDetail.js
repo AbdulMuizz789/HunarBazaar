@@ -15,12 +15,22 @@ export default function GigDetail() {
   const [alreadyReviewed, setAlreadyReviewed] = useState(false);
   const [error, setError] = useState('');
   const user = getCurrentUser();
-
+  const [appliedGigIds, setAppliedGigIds] = useState(new Set());
+  const [messageMap, setMessageMap] = useState({});
+  
   useEffect(() => {
     const fetchGig = async () => {
       try {
         const res = await axios.get(`${API_URL}/api/gigs/${gigId}`);
         setGig(res.data);
+
+        const appliedIds = res.data
+          .filter((gig) =>
+            gig.applications?.some(app => app.artisan?.toString() === user?.id)
+          )
+          .map(gig => gig._id);
+
+        setAppliedGigIds(new Set(appliedIds));
 
         const hasReviewed = res.data.reviews?.some(
           (review) => String(review.reviewer) === user?.id
@@ -37,6 +47,32 @@ export default function GigDetail() {
     fetchGig();
   }, [gigId, user?.id]);
 
+  const handleApply = async (gigId, message) => {
+    try {
+      const token = localStorage.getItem('token');
+      const body = {};
+      if (message && message.trim()) {
+        body.message = message.trim();
+      }
+
+      await axios.post(
+        `${API_URL}/api/gigs/${gigId}/apply`,
+        body,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      alert('Successfully applied to gig!');
+      setAppliedGigIds(prev => new Set(prev).add(gigId));
+    } catch (err) {
+      console.error(err);
+      alert('Failed to apply to gig.');
+    }
+  };
+
+  const handleMessageChange = (gigId, value) => {
+    setMessageMap((prev) => ({ ...prev, [gigId]: value }));
+  };
+
   if (loading) return <p className="text-center text-gray-600">Loading gig details...</p>;
   if (error) return <p className="text-center text-red-600">{error}</p>;
   if (!gig) return <p className="text-center text-gray-500">No gig found.</p>;
@@ -48,6 +84,8 @@ export default function GigDetail() {
       gig.applications?.some(
         (app) => app.artisan === user.id && app.status === 'accepted'
       ));
+
+  const alreadyApplied = appliedGigIds.has(gig._id);
 
   console.log({
     user,
@@ -84,6 +122,43 @@ export default function GigDetail() {
           ⭐ {averageRating} / 5 ({gig.reviews?.length} reviews)
         </p>
       )}
+
+      {user?.role === 'artisan' && (
+        <>
+          {!gig.isCompleted ? (
+            <>
+            {!alreadyApplied && (
+              <textarea
+                placeholder="Write a message to the client..."
+                value={messageMap[gig._id] || ''}
+                onChange={(e) => handleMessageChange(gig._id, e.target.value)}
+                rows={3}
+                className="w-full p-2 border border-gray-300 rounded resize-y mb-3"
+              />
+            )}
+            <button
+              onClick={() => handleApply(gig._id, messageMap[gig._id])}
+              disabled={alreadyApplied}
+              className={`w-full sm:w-auto px-4 py-2 rounded text-white font-medium transition ${
+                alreadyApplied
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-blue-600 hover:bg-blue-700'
+                }`}
+            >
+              {alreadyApplied ? 'Applied' : 'Apply to Gig'}
+            </button>
+          </>
+        ) : (
+          <button
+            disabled='true'
+            className={'w-full sm:w-auto px-4 py-2 rounded text-white font-medium transition bg-gray-400 cursor-not-allowed'}
+          >
+            Completed
+          </button>
+        )}
+      </>
+    )}
+
       {user?.id === gig.client._id && gig.applications.some(app => app.status === 'accepted') && !gig.booking?.startDate && (
         <BookingForm gigId={gig._id} />
       )}
