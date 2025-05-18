@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 const {API_URL} = require('../config');
+const {isArtisan} = require('../utils/auth');
 
 const EditProfileForm = ({ userId }) => {
   const [form, setForm] = useState({ name: '', email: '', location: '', skills: [] });
@@ -35,9 +36,13 @@ const EditProfileForm = ({ userId }) => {
   return (
     <form onSubmit={handleSubmit} className="p-4 bg-white rounded shadow max-w-md mx-auto">
       <h2 className="text-xl font-bold mb-4">Edit Profile</h2>
+      <label className="block text-sm font-medium">Name</label>
       <input className="block w-full mb-2 p-2 border" type="text" name="name" value={form.name} onChange={handleChange} placeholder="Name" />
+      <label className="block text-sm font-medium">Email</label>
       <input className="block w-full mb-2 p-2 border" type="email" name="email" value={form.email} onChange={handleChange} placeholder="Email" />
+      <label className="block text-sm font-medium">Location</label>
       <input className="block w-full mb-2 p-2 border" type="text" name="location" value={form.location} onChange={handleChange} placeholder="Location" />
+      <label className="block text-sm font-medium">Location</label>
       <input className="block w-full mb-2 p-2 border" type="text" name="skills" value={form.skills?.join(', ')} onChange={handleSkillsChange} placeholder="Skills (comma separated)" />
       <button className="bg-blue-600 text-white px-4 py-2 rounded" type="submit">Save Changes</button>
     </form>

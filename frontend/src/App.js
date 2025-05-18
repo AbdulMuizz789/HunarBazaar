@@ -11,6 +11,7 @@ import PostGig from './pages/PostGig';
 import FindArtisans from './pages/FindArtisans';
 import { isArtisan } from './utils/auth';
 import ChatAssistant from './components/ChatAssistant';
+import HomePage from './pages/HomePage';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
@@ -27,7 +28,7 @@ function App() {
     <Router>
       <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
       <Routes>
-        <Route path="/" element={<Gigs />} />         {/* Homepage (public) */}
+        <Route path="/" element={<HomePage />} />         {/* Homepage (public) */}
         <Route path="/auth" element={<Auth setIsLoggedIn={setIsLoggedIn} />} />     {/* Login/Register */}
         <Route path="/gigs/:gigId" element={<GigDetail />} />
         <Route 
