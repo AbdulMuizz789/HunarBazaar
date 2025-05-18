@@ -97,7 +97,7 @@ export default function ArtisanDashboard() {
                 }`}>
                   {gig.application.status || 'pending'}
                 </span>
-                {gig.booking && (
+                {gig.booking?.startDate && (
                   <div className="mt-2">
                     <p>Booking: {new Date(gig.booking.startDate).toLocaleString()} - {new Date(gig.booking.endDate).toLocaleString()}</p>
                     <BookingActions gigId={gig._id} currentStatus={gig.booking.status} />
