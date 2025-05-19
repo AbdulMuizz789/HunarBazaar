@@ -18,26 +18,31 @@ export default function BookingActions({ gigId, currentStatus }) {
   };
 
   return (
-    <div className="mt-4 space-x-2">
+    <div className="mt-6 flex gap-4">
       {currentStatus === 'pending' && (
         <>
           <button
             onClick={() => updateStatus('confirmed')}
-            className="px-3 py-1 bg-green-100 text-green-800 rounded hover:bg-green-200"
+            className="px-5 py-2 rounded-md bg-gradient-to-r from-green-500 to-emerald-600 text-white font-medium shadow hover:opacity-90 transition duration-200"
           >
-            Confirm
+            ✅ Confirm
           </button>
           <button
             onClick={() => updateStatus('cancelled')}
-            className="px-3 py-1 bg-red-100 text-red-800 rounded hover:bg-red-200"
+            className="px-5 py-2 rounded-md bg-gradient-to-r from-red-500 to-pink-600 text-white font-medium shadow hover:opacity-90 transition duration-200"
           >
-            Reject
+            ❌ Reject
           </button>
         </>
       )}
       {currentStatus === 'confirmed' && (
-        <span className="px-3 py-1 bg-green-100 text-green-800 rounded">
-          Confirmed
+        <span className="px-5 py-2 rounded-md bg-green-700 text-white font-medium shadow">
+          ✅ Confirmed
+        </span>
+      )}
+      {currentStatus === 'cancelled' && (
+        <span className="px-5 py-2 rounded-md bg-red-700 text-white font-medium shadow">
+          ❌ Cancelled
         </span>
       )}
     </div>

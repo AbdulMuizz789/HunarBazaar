@@ -24,7 +24,7 @@ export default function Auth({ setIsLoggedIn }) {
       }
       localStorage.setItem('token', res.data.token);
       setIsLoggedIn(true);
-      navigate('/');
+      navigate('/gigs');
     } catch (err) {
       alert(`${isLogin ? 'Login' : 'Registration'} failed!`);
       console.error(err);
