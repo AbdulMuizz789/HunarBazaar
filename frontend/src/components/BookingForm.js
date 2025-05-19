@@ -22,30 +22,37 @@ export default function BookingForm({ gigId }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3 mt-4">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white p-6 rounded-lg shadow-lg max-w-xl mx-auto mt-10 space-y-5"
+    >
+      <h2 className="text-xl font-semibold text-purple-300">Book This Gig</h2>
+
       <div>
-        <label className="block">Start Date:</label>
+        <label className="block text-sm text-purple-100 mb-1">Start Date</label>
         <input
           type="datetime-local"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
-          className="border p-2 w-full rounded"
+          className="w-full p-3 bg-gray-900 text-white border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
           required
         />
       </div>
+
       <div>
-        <label className="block">End Date:</label>
+        <label className="block text-sm text-purple-100 mb-1">End Date</label>
         <input
           type="datetime-local"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
-          className="border p-2 w-full rounded"
+          className="w-full p-3 bg-gray-900 text-white border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
           required
         />
       </div>
+
       <button
         type="submit"
-        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+        className="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded shadow transition duration-200"
       >
         Request Booking
       </button>

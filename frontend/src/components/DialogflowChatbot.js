@@ -21,63 +21,71 @@ export default function DialogflowChatbot() {
     e.preventDefault();
     if (!input.trim()) return;
 
-    // Add user message
     setMessages(prev => [...prev, { text: input, sender: 'user' }]);
     setInput('');
 
     try {
-      // Get response from Dialogflow
       const res = await axios.post(`${API_URL}/api/dialogflow/detect-intent`, {
         message: input,
-        userId: user.id // Replace with actual user ID
+        userId: user.id
       });
 
-      // Add bot reply
       setMessages(prev => [...prev, { text: res.data.reply, sender: 'bot' }]);
     } catch (err) {
-      setMessages(prev => [...prev, { 
-        text: "Sorry, I couldn't process your request.", 
-        sender: 'bot' 
+      setMessages(prev => [...prev, {
+        text: "Sorry, I couldn't process your request.",
+        sender: 'bot'
       }]);
     }
   };
 
   return (
     <>
-      {/* Floating button */}
+      {/* Floating Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 bg-blue-500 text-white p-3 rounded-full shadow-lg"
+        className="fixed bottom-6 right-6 bg-gradient-to-br from-purple-600 to-indigo-700 text-white p-3 rounded-full shadow-lg hover:scale-105 transition"
       >
         {isOpen ? '✕' : '🤖'}
       </button>
 
-      {/* Chat window */}
+      {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-20 right-6 w-80 bg-white border rounded-lg shadow-xl flex flex-col">
-          <div className="bg-blue-500 text-white p-3 rounded-t-lg">
-            <h3 className="font-bold">ArtisanHQ Assistant</h3>
+        <div className="fixed bottom-20 right-6 w-80 bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white border border-gray-700 rounded-lg shadow-2xl flex flex-col">
+          {/* Header */}
+          <div className="bg-purple-700 p-3 rounded-t-lg">
+            <h3 className="font-bold text-lg">ArtisanHQ Assistant</h3>
           </div>
-          <div className="flex-1 p-3 overflow-y-auto h-64">
+
+          {/* Messages */}
+          <div className="flex-1 p-4 overflow-y-auto max-h-96 space-y-3 text-sm">
             {messages.map((msg, i) => (
-              <div 
-                key={i} 
-                className={`mb-2 ${msg.sender === 'user' ? 'text-right' : 'text-left'}`}
+              <div
+                key={i}
+                className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                <div className={`inline-block p-2 rounded-lg ${msg.sender === 'user' ? 'bg-blue-100' : 'bg-gray-100'}`}>
+                <div
+                  className={`p-2 rounded-xl max-w-[80%] ${
+                    msg.sender === 'user'
+                      ? 'bg-purple-600 text-right'
+                      : 'bg-gray-700 text-left'
+                  }`}
+                >
                   {msg.text}
                 </div>
               </div>
             ))}
             <div ref={messagesEndRef} />
           </div>
-          <form onSubmit={handleSend} className="p-3 border-t">
+
+          {/* Input Box */}
+          <form onSubmit={handleSend} className="p-3 border-t border-gray-600 bg-[#1a1a2e]">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type your question..."
-              className="w-full border p-2 rounded"
+              className="w-full bg-gray-800 text-white border border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-purple-500"
             />
           </form>
         </div>
